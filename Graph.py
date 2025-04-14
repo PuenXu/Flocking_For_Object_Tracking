@@ -19,6 +19,7 @@ class Graph:
     self.ax = plt.axes(xlim=(0, 100.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
+    self.gamma, = self.ax.plot([], [], 'r.')
     self.anim = None
     
     # for reading in graphs if they come from a file
@@ -108,10 +109,13 @@ class Graph:
     self.anim = animation.FuncAnimation(self.fig, self.animate, interval=self.animatedt, blit=False)
     
     plt.show()
-    
+
   def animate(self, i):
     """ Animation helper function """
-    x,y = self.gatherNodeLocations()
+    x, y = self.gatherNodeLocations()
     self.pts.set_data(x, y)
     
-    return self.pts, 
+    gamma_pos = self.V[0].gamma_pos
+    self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
+
+    return self.pts, self.gamma

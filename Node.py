@@ -30,10 +30,19 @@ class Node(Thread):
     # self.c1_gamma = 5
     # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
 
+    # self.c1_alpha = 1
+    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
+    # self.c1_gamma = 5
+    # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
+
     self.c1_alpha = 1
     self.c2_alpha = 1
     self.c1_gamma = 1
     self.c2_gamma = 1
+
+    self.gamma_pos = np.array([20, 20])
+    self.gamma_vel = np.array([5, 3])
+    self.gamma_u = np.array([0, 0])
     
   def __str__(self):
     """ Printing """
@@ -113,10 +122,7 @@ class Node(Thread):
         f_alpha += self.c1_alpha * phi_alpha(sigma_norm(pos - self.position)) * n_ij(pos, self.position)
         f_alpha += self.c2_alpha * a_ij(pos, self.position) * (vel - self.velocity)
 
-    gama_pos = np.array([50, 50])
-    gamma_vel = np.array([0, 0])
-
-    f_gamma = -self.c1_gamma * (self.position - gama_pos) - self.c2_gamma * (self.velocity - gamma_vel)
+    f_gamma = -self.c1_gamma * (self.position - self.gamma_pos) - self.c2_gamma * (self.velocity - self.gamma_vel)
 
     self.u = f_alpha + f_gamma
   
@@ -124,3 +130,6 @@ class Node(Thread):
     """ Move towards the centroid """
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
+
+    self.gamma_vel = self.gamma_vel + self.gamma_u * self.nominaldt
+    self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt
