@@ -4,7 +4,7 @@ from queue import Empty
 import numpy as np
 import time
 from matplotlib import pyplot as plt
-
+from functions import phi_alpha, a_ij, n_ij, sigma_norm
 
 class Node(Thread):
   def __init__(self, uid):
@@ -24,6 +24,11 @@ class Node(Thread):
     self.nominaldt = 0.05           # time step
 
     self.u = np.array([0, 0]) # control input
+
+    self.c1_alpha = 3
+    self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
+    self.c1_gamma = 5
+    self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
     
   def __str__(self):
     """ Printing """
@@ -89,6 +94,8 @@ class Node(Thread):
   def transition(self):      
     """ Receive messages """
 
+    f_alpha = 0
+
     for inbr in self.in_nbr:
       # retrieve most recent message (timeout = 1s)
       data = inbr.get()
@@ -97,6 +104,16 @@ class Node(Thread):
         print("Node %d received data from %d " % (self.uid, inbr.in_nbr.uid))
         pos = data[0:2]
         vel = data[2:4]
+
+        f_alpha += self.c1_alpha * phi_alpha(sigma_norm(pos - self.position)) * n_ij(pos, self.position)
+        f_alpha += self.c2_alpha * a_ij(pos, self.position) * (vel - self.velocity)
+
+    gama_pos = np.array([0.5, 0.5])
+    gamma_vel = np.array([0, 0])
+
+    f_gamma = -self.c1_gamma * (self.position - gama_pos) - self.c2_gamma * (self.velocity - gamma_vel)
+
+    self.u = f_alpha + f_gamma
   
   def dynamics(self):
     """ Move towards the centroid """
