@@ -25,10 +25,16 @@ class Node(Thread):
 
     self.u = np.array([0, 0]) # control input
 
-    self.c1_alpha = 3
-    self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    self.c1_gamma = 5
-    self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
+    # self.c1_alpha = 3
+    # self.c1_alpha = 1
+    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
+    # self.c1_gamma = 5
+    # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
+
+    self.c1_alpha = 1
+    self.c2_alpha = 1
+    self.c1_gamma = 1
+    self.c2_gamma = 1
     
   def __str__(self):
     """ Printing """

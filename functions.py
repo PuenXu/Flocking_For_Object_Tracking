@@ -9,7 +9,7 @@ c = np.abs(a-b) / np.sqrt(4*a*b) # phi
 
 # Functions
 def sigma_norm(z):
-    return 1/epsilon * np.sqrt(1 + epsilon * np.linalg.norm(z)**2) - 1
+    return 1 / epsilon * (np.sqrt(1 + epsilon * np.linalg.norm(z)**2) - 1)
 
 def rho_h(z):
     if 0 <= z < h:
