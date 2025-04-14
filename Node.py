@@ -16,10 +16,14 @@ class Node(Thread):
     self.out_nbr = [] # list of outgoing edges (see Edge class)
     self.in_nbr = []  # list of incoming edges (see Edge class)
     
-    self.position = [0,0]   # position ([rx, ry])
+    self.position = np.array([0, 0])   # position ([rx, ry])
+    self.velocity = np.array([0, 0])   # position ([vx, vy])
+
     self.done = False # termination flag
     
     self.nominaldt = 0.05           # time step
+
+    self.u = np.array([0, 0]) # control input
     
   def __str__(self):
     """ Printing """
@@ -44,14 +48,10 @@ class Node(Thread):
   # Set states externally
   #
   ################################################
-
-  def setPosition(self, s):
-    """ update the position of the node """
-    self.position = s
-    
-  def getPosition(self):
-    """ return the position of the node """
-    return self.position
+  
+  def getState(self):
+    """ return the state of the node """
+    return np.concatenate([self.position, self.velocity])
 
   def terminate(self):
     """ stop sim """
@@ -78,26 +78,27 @@ class Node(Thread):
     
   ################################################
   #
-  # YOUR CODE GOES HERE
+  # Implementation
   #
   ################################################
   def send(self):
     """ Send messages """
-    # REPLACE WITH YOUR CODE
     for inbr in self.out_nbr:
-      inbr.put(0) # send 0 to all neigbors
+      inbr.put(self.getState()) # send states (pos & vel) to all neigbors
 
   def transition(self):      
-    """ Receive messages, update Voronoi Cell """
-    # REPLACE WITH YOUR CODE
+    """ Receive messages """
 
     for inbr in self.in_nbr:
       # retrieve most recent message (timeout = 1s)
       data = inbr.get()
+
       if (not (data is None)):
         print("Node %d received data from %d " % (self.uid, inbr.in_nbr.uid))
+        pos = data[0:2]
+        vel = data[2:4]
   
   def dynamics(self):
     """ Move towards the centroid """
-    # self.position = self.position - self.nominaldt # move to bottom left
-    self.position = self.position + 0.1*([0.5, 0.5] - self.position) # gather in the middle
+    self.velocity = self.velocity + self.u * self.nominaldt
+    self.position = self.position + self.velocity * self.nominaldt

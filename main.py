@@ -14,7 +14,8 @@ def generateRandomGraph(N):
   for inode in range(N):
     # randomly generate node states
     n = Node(inode)
-    n.setPosition(np.random.rand(2))
+    n.position = np.random.rand(2) # random from [0, 1]
+    n.velocity = np.random.rand(2) - 0.5 # random from [-0.5, 0.5]
     G.addNode(n)
   
     # add all-to-all edges
