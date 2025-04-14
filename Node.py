@@ -26,7 +26,6 @@ class Node(Thread):
     self.u = np.array([0, 0]) # control input
 
     # self.c1_alpha = 3
-    # self.c1_alpha = 1
     # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
     # self.c1_gamma = 5
     # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
@@ -114,7 +113,7 @@ class Node(Thread):
         f_alpha += self.c1_alpha * phi_alpha(sigma_norm(pos - self.position)) * n_ij(pos, self.position)
         f_alpha += self.c2_alpha * a_ij(pos, self.position) * (vel - self.velocity)
 
-    gama_pos = np.array([0.5, 0.5])
+    gama_pos = np.array([50, 50])
     gamma_vel = np.array([0, 0])
 
     f_gamma = -self.c1_gamma * (self.position - gama_pos) - self.c2_gamma * (self.velocity - gamma_vel)

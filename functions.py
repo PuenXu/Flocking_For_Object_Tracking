@@ -25,7 +25,7 @@ def sigma_1(z):
 def phi(z):
     return 0.5 * ((a+b) * sigma_1(z+c) + (a-b))
 
-r = 0.3 # com radius, interaction range
+r = 12 # com radius, interaction range
 r_alpha = sigma_norm(r) # phi alpha
 k = 1.2 # phi alpha, scaling factor
 d = r / k # phi alpha

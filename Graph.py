@@ -16,7 +16,7 @@ class Graph:
     # for plotting
     self.animatedt = 100 # milliseconds
     self.fig = plt.figure()
-    self.ax = plt.axes(xlim=(0, 1.0), ylim=(0, 1.0))
+    self.ax = plt.axes(xlim=(0, 100.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
     self.anim = None

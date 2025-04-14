@@ -11,7 +11,7 @@ class Edge:
     self.val = None
     
     # self.commsradius = 1
-    self.commsradius = 0.3
+    self.commsradius = 12
     
   def __str__(self):
     """ Printing """
