@@ -14,8 +14,7 @@ def generateRandomGraph(N):
   for inode in range(N):
     # randomly generate node states
     n = Node(inode)
-    n.position = np.random.rand(2) * 100 # random from [0, 100]
-    n.velocity = np.random.rand(2) - 0.5 # random from [-0.5, 0.5]
+    n.position = np.random.rand(2) * 90 # random from [0, 90]
     G.addNode(n)
   
     # add all-to-all edges
@@ -29,8 +28,8 @@ def generateRandomGraph(N):
 ### MAIN
 if __name__ == '__main__':
 
-  # generate a random graph with 30 nodes
-  G = generateRandomGraph(30)
+  # generate a random graph with 50 nodes
+  G = generateRandomGraph(50)
   
   print("========== Starting now ==========")
   print("Close the figure to stop the simulation")

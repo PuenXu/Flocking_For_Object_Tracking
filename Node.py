@@ -21,28 +21,32 @@ class Node(Thread):
 
     self.done = False # termination flag
     
-    self.nominaldt = 0.05           # time step
+    self.nominaldt = 0.03          # time step
 
     self.u = np.array([0, 0]) # control input
 
-    # self.c1_alpha = 3
-    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    # self.c1_gamma = 5
-    # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
+    self.c1_alpha = 3
+    self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
+    self.c1_mt = 5
+    self.c2_mt = 2 * np.sqrt(self.c1_mt)
+    self.c1_mc = 5
+    self.c2_mc = 2 * np.sqrt(self.c1_mt)
 
     # self.c1_alpha = 1
     # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    # self.c1_gamma = 5
-    # self.c2_gamma = 0.2 * np.sqrt(self.c1_gamma)
+    # self.c1_mt = 5
+    # self.c2_mt = 2 * np.sqrt(self.c1_mt)
 
-    self.c1_alpha = 1
-    self.c2_alpha = 1
-    self.c1_gamma = 1
-    self.c2_gamma = 1
+    # self.c1_alpha = 1
+    # self.c2_alpha = 1
+    # self.c1_mt = 1
+    # self.c2_mt = 1
+    # self.c1_mc = 1
+    # self.c2_mc = 1
 
     self.gamma_pos = np.array([20, 20])
-    self.gamma_vel = np.array([5, 3])
-    self.gamma_u = np.array([0, 0])
+    self.gamma_vel = np.array([30, 10])
+    # self.gamma_u = np.array([0.5, 0.3])
     
   def __str__(self):
     """ Printing """
@@ -110,19 +114,38 @@ class Node(Thread):
 
     f_alpha = 0
 
+    count = 1
+    total_pos = self.position
+    total_vel = self.velocity
+
     for inbr in self.in_nbr:
       # retrieve most recent message (timeout = 1s)
       data = inbr.get()
 
       if (not (data is None)):
-        print("Node %d received data from %d " % (self.uid, inbr.in_nbr.uid))
+
         pos = data[0:2]
         vel = data[2:4]
 
         f_alpha += self.c1_alpha * phi_alpha(sigma_norm(pos - self.position)) * n_ij(pos, self.position)
         f_alpha += self.c2_alpha * a_ij(pos, self.position) * (vel - self.velocity)
 
-    f_gamma = -self.c1_gamma * (self.position - self.gamma_pos) - self.c2_gamma * (self.velocity - self.gamma_vel)
+        total_pos = total_pos + pos
+        total_vel = total_vel + vel
+        count += 1
+
+    f_gamma = -self.c1_mt * (self.position - self.gamma_pos) - self.c2_mt * (self.velocity - self.gamma_vel)
+
+    avg_pos = total_pos / count
+    avg_vel = total_vel / count
+
+    print(count)
+
+    f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
+
+    # print("uid", self.uid)
+    # print("f alpha", f_alpha)
+    # print("f gamma", f_gamma)
 
     self.u = f_alpha + f_gamma
   
@@ -131,5 +154,9 @@ class Node(Thread):
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
 
-    self.gamma_vel = self.gamma_vel + self.gamma_u * self.nominaldt
+    # self.gamma_vel = self.gamma_vel + self.gamma_u * self.nominaldt
+    if self.gamma_pos[0] > 100:
+      self.gamma_vel = np.array([-30, 10])
+    if self.gamma_pos[0] < 40:
+      self.gamma_vel = np.array([30, 10])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt
