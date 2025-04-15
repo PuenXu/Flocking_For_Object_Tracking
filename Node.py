@@ -25,11 +25,20 @@ class Node(Thread):
 
     self.u = np.array([0, 0]) # control input
 
-    self.c1_alpha = 3
+    # self.c1_alpha = 3
+    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
+    # self.c1_mt = 5
+    # self.c2_mt = 2 * np.sqrt(self.c1_mt)
+    # self.c1_mc = 5
+    # self.c2_mc = 2 * np.sqrt(self.c1_mt)
+    # self.c1_beta = 20
+    # self.c2_beta = 2 * np.sqrt(self.c1_beta)
+
+    self.c1_alpha = 1
     self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    self.c1_mt = 5
+    self.c1_mt = 2
     self.c2_mt = 2 * np.sqrt(self.c1_mt)
-    self.c1_mc = 5
+    self.c1_mc = 2
     self.c2_mc = 2 * np.sqrt(self.c1_mt)
     self.c1_beta = 20
     self.c2_beta = 2 * np.sqrt(self.c1_beta)
@@ -50,7 +59,7 @@ class Node(Thread):
     self.gamma_vel = np.array([0, 0])
     # self.gamma_u = np.array([0.5, 0.3])
 
-    self.obstacle_x, self.obstacle_y = 70, 70     # Center of the circle
+    self.obstacle_x, self.obstacle_y = 70, 50     # Center of the circle
     self.obstacle_r = 10         # Radius
     
     self.start_time = time.time()
@@ -146,22 +155,25 @@ class Node(Thread):
     avg_pos = total_pos / count
     avg_vel = total_vel / count
 
-    print(count)
+    # print(count)
 
     f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
 
     # obstacle
     y_k = np.array([self.obstacle_x, self.obstacle_y])
     r_k = self.obstacle_r
-    q_ik_var = q_ik(self.position, y_k, r_k)
+    self.q_ik_var = q_ik(self.position, y_k, r_k)
     p_ik_var = p_ik(self.position, self.velocity, y_k, r_k)
 
-    n_ik_var = n_ik(q_ik_var, self.position)
-    b_ik_var = b_ik(q_ik_var, self.position)
+    n_ik_var = n_ik(self.q_ik_var, self.position)
+    b_ik_var = b_ik(self.q_ik_var, self.position)
 
-    f_beta = self.c1_beta * phi_beta(sigma_norm(q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
+    f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
+    print(f_beta)
+
     # self.u = f_gamma + f_beta
+    # self.u = f_alpha + f_gamma
     self.u = f_alpha + f_gamma + f_beta
   
   def dynamics(self):
@@ -169,6 +181,7 @@ class Node(Thread):
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
 
-    curr_time = time.time() - self.start_time
-    self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
+    # curr_time = time.time() - self.start_time
+    # self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
+    self.gamma_vel = np.array([10, 0])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt

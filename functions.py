@@ -63,9 +63,9 @@ def rho_h_obstacle(z):
     else:
         return 0
     
-d_prime = 0.6*d
-r_prime = 1.2*d_prime
-d_beta = sigma_norm(d_prime)
+# d_prime = 0.6*d
+r_prime = 1.2*r
+d_beta = sigma_norm(r_prime)
 
 def b_ik(q_ik, q_i):
     return rho_h_obstacle(sigma_norm(q_ik-q_i) / d_beta)

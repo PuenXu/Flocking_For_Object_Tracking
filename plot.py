@@ -17,7 +17,7 @@ time = [0.1 * i for i in range(n)]
 
 mse = np.sqrt(np.subtract(com_x, target_x)**2 + np.subtract(com_y, target_y)**2)
 
-x, y = 70, 70     # Center of the circle
+x, y = 30, 30     # Center of the circle
 r = 10         # Radius
 
 # Generate points on the circle
@@ -45,5 +45,4 @@ plt.plot(time, mse)
 plt.xlabel('time (s)')
 plt.ylabel('mean squared error')
 plt.title('Mean Square Error vs Time')
-plt.legend()
 plt.show()

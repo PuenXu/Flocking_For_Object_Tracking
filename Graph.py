@@ -20,10 +20,11 @@ class Graph:
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
     self.gamma, = self.ax.plot([], [], 'r.')
+    self.beta, = self.ax.plot([], [], 'g.')
     self.anim = None
 
     # obstacle
-    x, y = 70, 70     # Center of the circle
+    x, y = 70, 50     # Center of the circle
     r = 10         # Radius
 
     # Generate points on the circle
@@ -124,6 +125,14 @@ class Graph:
       x.append(self.V[i].position[0])
       y.append(self.V[i].position[1])
     return x,y
+  
+  def gatherBetaLocations(self):
+    """ Collect state information from all the nodes """
+    x = []; y = [];
+    for i in range(self.Nv):
+      x.append(self.V[i].q_ik_var[0])
+      y.append(self.V[i].q_ik_var[1])
+    return x,y
     
   def setupAnimation(self):
     """ Initialize the animation """
@@ -135,6 +144,9 @@ class Graph:
     """ Animation helper function """
     x, y = self.gatherNodeLocations()
     self.pts.set_data(x, y)
+
+    beta_x, beta_y = self.gatherBetaLocations()
+    self.beta.set_data(beta_x, beta_y)
     
     gamma_pos = self.V[0].gamma_pos
     self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
@@ -145,4 +157,4 @@ class Graph:
     self.target_x_traj.append(gamma_pos[0])
     self.target_y_traj.append(gamma_pos[1])
 
-    return self.pts, self.gamma
+    return self.pts, self.gamma, self.beta
