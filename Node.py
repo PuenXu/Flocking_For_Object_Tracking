@@ -4,7 +4,7 @@ from queue import Empty
 import numpy as np
 import time
 from matplotlib import pyplot as plt
-from functions import phi_alpha, a_ij, n_ij, sigma_norm
+from functions import *
 
 class Node(Thread):
   def __init__(self, uid):
@@ -27,10 +27,12 @@ class Node(Thread):
 
     self.c1_alpha = 3
     self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    self.c1_mt = 10
+    self.c1_mt = 5
     self.c2_mt = 2 * np.sqrt(self.c1_mt)
-    self.c1_mc = 10
+    self.c1_mc = 5
     self.c2_mc = 2 * np.sqrt(self.c1_mt)
+    self.c1_beta = 20
+    self.c2_beta = 2 * np.sqrt(self.c1_beta)
 
     # self.c1_alpha = 1
     # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
@@ -47,6 +49,9 @@ class Node(Thread):
     self.gamma_pos = np.array([20, 50])
     self.gamma_vel = np.array([0, 0])
     # self.gamma_u = np.array([0.5, 0.3])
+
+    self.obstacle_x, self.obstacle_y = 70, 70     # Center of the circle
+    self.obstacle_r = 10         # Radius
     
     self.start_time = time.time()
 
@@ -144,8 +149,20 @@ class Node(Thread):
     print(count)
 
     f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
+
+    # obstacle
+    y_k = np.array([self.obstacle_x, self.obstacle_y])
+    r_k = self.obstacle_r
+    q_ik_var = q_ik(self.position, y_k, r_k)
+    p_ik_var = p_ik(self.position, self.velocity, y_k, r_k)
+
+    n_ik_var = n_ik(q_ik_var, self.position)
+    b_ik_var = b_ik(q_ik_var, self.position)
+
+    f_beta = self.c1_beta * phi_beta(sigma_norm(q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
-    self.u = f_alpha + f_gamma
+    # self.u = f_gamma + f_beta
+    self.u = f_alpha + f_gamma + f_beta
   
   def dynamics(self):
     """ Move towards the centroid """

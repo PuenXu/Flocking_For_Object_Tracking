@@ -17,8 +17,20 @@ time = [0.1 * i for i in range(n)]
 
 mse = np.sqrt(np.subtract(com_x, target_x)**2 + np.subtract(com_y, target_y)**2)
 
+x, y = 70, 70     # Center of the circle
+r = 10         # Radius
+
+# Generate points on the circle
+theta = np.linspace(0, 2*np.pi, 100)
+circle_x = x + r * np.cos(theta)
+circle_y = y + r * np.sin(theta)
+
+
+
 # Plot
 plt.figure()
+plt.axes(xlim=(0, 150.0), ylim=(0, 150.0)).set_aspect('equal', 'box')
+plt.plot(circle_x, circle_y, label='Circle')
 plt.plot(com_x, com_y, marker='o', label='Center of Mass')
 plt.plot(target_x, target_y, marker='.', label='Target')
 plt.xlabel('x position (m)')

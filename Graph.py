@@ -22,6 +22,17 @@ class Graph:
     self.gamma, = self.ax.plot([], [], 'r.')
     self.anim = None
 
+    # obstacle
+    x, y = 70, 70     # Center of the circle
+    r = 10         # Radius
+
+    # Generate points on the circle
+    theta = np.linspace(0, 2*np.pi, 100)
+    circle_x = x + r * np.cos(theta)
+    circle_y = y + r * np.sin(theta)
+
+    self.ax.plot(circle_x, circle_y, label='Obstacle')
+
     # for analysis
     self.com_x_traj = []
     self.com_y_traj = []

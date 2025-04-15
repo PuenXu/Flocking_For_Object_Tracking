@@ -39,3 +39,36 @@ def a_ij(q_j, q_i):
 
 def n_ij(q_j, q_i):
     return (q_j-q_i) / np.sqrt(1 + epsilon * np.linalg.norm(q_j-q_i)**2)
+
+def q_ik(q_i, y_k, R_k):
+    mu = R_k / np.linalg.norm(q_i-y_k)
+    return mu * q_i + (1-mu) * y_k
+
+def p_ik(q_i, p_i, y_k, R_k):
+    a_k = (q_i-y_k) / np.linalg.norm(q_i-y_k)
+    P = np.identity(2) - np.outer(a_k, a_k)
+    mu = R_k / np.linalg.norm(q_i-y_k)
+    return mu * P @ p_i
+
+def n_ik(q_ik, q_i):
+    return n_ij(q_ik, q_i)
+
+h_obstacle = 0.9 # rho h obstacle
+
+def rho_h_obstacle(z):
+    if 0 <= z < h_obstacle:
+        return 1
+    elif h_obstacle <= z <= 1:
+        return 0.5 * (1 + np.cos(np.pi * (z-h_obstacle) / (1-h_obstacle)))
+    else:
+        return 0
+    
+d_prime = 0.6*d
+r_prime = 1.2*d_prime
+d_beta = sigma_norm(d_prime)
+
+def b_ik(q_ik, q_i):
+    return rho_h_obstacle(sigma_norm(q_ik-q_i) / d_beta)
+
+def phi_beta(z):
+    return rho_h_obstacle(z/d_beta) * (sigma_1(z-d_beta) - 1)
