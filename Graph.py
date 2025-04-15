@@ -96,7 +96,6 @@ class Graph:
     for i in range(self.Nv):
       self.V[i].join()
       
-
     # for analysis
     data = np.column_stack((self.com_x_traj, self.com_y_traj, self.target_x_traj, self.target_y_traj))
     np.savetxt('data.csv', data, delimiter=',', header='com_x, com_y, target_x, target_y', comments='')

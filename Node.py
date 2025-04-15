@@ -144,11 +144,7 @@ class Node(Thread):
     print(count)
 
     f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
-
-    # print("uid", self.uid)
-    # print("f alpha", f_alpha)
-    # print("f gamma", f_gamma)
-
+    
     self.u = f_alpha + f_gamma
   
   def dynamics(self):
@@ -156,11 +152,6 @@ class Node(Thread):
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
 
-    # self.gamma_vel = self.gamma_vel + self.gamma_u * self.nominaldt
-    # if self.gamma_pos[0] > 100:
-    #   self.gamma_vel = np.array([-30, 10])
-    # if self.gamma_pos[0] < 40:
-    #   self.gamma_vel = np.array([30, 10])
     curr_time = time.time() - self.start_time
     self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt
