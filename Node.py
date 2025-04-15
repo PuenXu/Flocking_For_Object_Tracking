@@ -27,9 +27,9 @@ class Node(Thread):
 
     self.c1_alpha = 3
     self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    self.c1_mt = 5
+    self.c1_mt = 10
     self.c2_mt = 2 * np.sqrt(self.c1_mt)
-    self.c1_mc = 5
+    self.c1_mc = 10
     self.c2_mc = 2 * np.sqrt(self.c1_mt)
 
     # self.c1_alpha = 1
@@ -44,10 +44,12 @@ class Node(Thread):
     # self.c1_mc = 1
     # self.c2_mc = 1
 
-    self.gamma_pos = np.array([20, 20])
-    self.gamma_vel = np.array([30, 10])
+    self.gamma_pos = np.array([20, 50])
+    self.gamma_vel = np.array([0, 0])
     # self.gamma_u = np.array([0.5, 0.3])
     
+    self.start_time = time.time()
+
   def __str__(self):
     """ Printing """
     return "Node %d has %d in_nbr and %d out_nbr" % (self.uid, len(self.in_nbr), len(self.out_nbr))
@@ -155,8 +157,10 @@ class Node(Thread):
     self.position = self.position + self.velocity * self.nominaldt
 
     # self.gamma_vel = self.gamma_vel + self.gamma_u * self.nominaldt
-    if self.gamma_pos[0] > 100:
-      self.gamma_vel = np.array([-30, 10])
-    if self.gamma_pos[0] < 40:
-      self.gamma_vel = np.array([30, 10])
+    # if self.gamma_pos[0] > 100:
+    #   self.gamma_vel = np.array([-30, 10])
+    # if self.gamma_pos[0] < 40:
+    #   self.gamma_vel = np.array([30, 10])
+    curr_time = time.time() - self.start_time
+    self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt

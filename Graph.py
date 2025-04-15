@@ -21,6 +21,12 @@ class Graph:
     self.pts, = self.ax.plot([], [], 'b.')
     self.gamma, = self.ax.plot([], [], 'r.')
     self.anim = None
+
+    # for analysis
+    self.com_x_traj = []
+    self.com_y_traj = []
+    self.target_x_traj = []
+    self.target_y_traj = []
     
     # for reading in graphs if they come from a file
     if not(filename is None):
@@ -90,6 +96,11 @@ class Graph:
     for i in range(self.Nv):
       self.V[i].join()
       
+
+    # for analysis
+    data = np.column_stack((self.com_x_traj, self.com_y_traj, self.target_x_traj, self.target_y_traj))
+    np.savetxt('data.csv', data, delimiter=',', header='com_x, com_y, target_x, target_y', comments='')
+
   ################################################
   #
   # Animation helpers
@@ -117,5 +128,11 @@ class Graph:
     
     gamma_pos = self.V[0].gamma_pos
     self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
+
+    self.com_x_traj.append(sum(x) / len(x))
+    self.com_y_traj.append(sum(y) / len(y))
+
+    self.target_x_traj.append(gamma_pos[0])
+    self.target_y_traj.append(gamma_pos[1])
 
     return self.pts, self.gamma
