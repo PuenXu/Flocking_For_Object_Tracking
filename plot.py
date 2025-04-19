@@ -17,7 +17,7 @@ time = [0.1 * i for i in range(n)]
 
 mse = np.sqrt(np.subtract(com_x, target_x)**2 + np.subtract(com_y, target_y)**2)
 
-x, y = 30, 30     # Center of the circle
+x, y = 70, 50     # Center of the circle
 r = 10         # Radius
 
 # Generate points on the circle

@@ -21,7 +21,7 @@ class Node(Thread):
 
     self.done = False # termination flag
     
-    self.nominaldt = 0.03          # time step
+    self.nominaldt = 0.02          # time step
 
     self.u = np.array([0, 0]) # control input
 
@@ -34,13 +34,13 @@ class Node(Thread):
     # self.c1_beta = 20
     # self.c2_beta = 2 * np.sqrt(self.c1_beta)
 
-    self.c1_alpha = 1
+    self.c1_alpha = 5
     self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    self.c1_mt = 2
+    self.c1_mt = 15
     self.c2_mt = 2 * np.sqrt(self.c1_mt)
-    self.c1_mc = 2
+    self.c1_mc = 10
     self.c2_mc = 2 * np.sqrt(self.c1_mt)
-    self.c1_beta = 20
+    self.c1_beta = 300
     self.c2_beta = 2 * np.sqrt(self.c1_beta)
 
     # self.c1_alpha = 1
@@ -155,7 +155,7 @@ class Node(Thread):
     avg_pos = total_pos / count
     avg_vel = total_vel / count
 
-    # print(count)
+    print(1)
 
     f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
 
@@ -168,12 +168,16 @@ class Node(Thread):
     n_ik_var = n_ik(self.q_ik_var, self.position)
     b_ik_var = b_ik(self.q_ik_var, self.position)
 
-    f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
+    f_beta = 0
+
+    if np.linalg.norm(self.q_ik_var-self.position) < 9:
+      f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
-    print(f_beta)
+    # print(f_beta)
 
     # self.u = f_gamma + f_beta
     # self.u = f_alpha + f_gamma
+    # self.u = f_gamma
     self.u = f_alpha + f_gamma + f_beta
   
   def dynamics(self):
@@ -183,5 +187,5 @@ class Node(Thread):
 
     # curr_time = time.time() - self.start_time
     # self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
-    self.gamma_vel = np.array([10, 0])
+    self.gamma_vel = np.array([20, 0])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt

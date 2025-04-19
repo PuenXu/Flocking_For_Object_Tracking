@@ -19,8 +19,8 @@ class Graph:
     self.ax = plt.axes(xlim=(0, 150.0), ylim=(0, 150.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
-    self.gamma, = self.ax.plot([], [], 'r.')
-    self.beta, = self.ax.plot([], [], 'g.')
+    self.gamma, = self.ax.plot([], [], 'r*')
+    self.beta, = self.ax.plot([], [], 'go')
     self.anim = None
 
     # obstacle
@@ -32,7 +32,7 @@ class Graph:
     circle_x = x + r * np.cos(theta)
     circle_y = y + r * np.sin(theta)
 
-    self.ax.plot(circle_x, circle_y, label='Obstacle')
+    self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
 
     # for analysis
     self.com_x_traj = []
