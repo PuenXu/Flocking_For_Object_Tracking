@@ -23,16 +23,17 @@ class Graph:
     self.beta, = self.ax.plot([], [], 'go')
     self.anim = None
 
-    # obstacle
-    x, y = 70, 50     # Center of the circle
-    r = 10         # Radius
+    # # obstacle
+    # x, y = 70, 50     # Center of the circle
+    # r = 10         # Radius
 
-    # Generate points on the circle
-    theta = np.linspace(0, 2*np.pi, 100)
-    circle_x = x + r * np.cos(theta)
-    circle_y = y + r * np.sin(theta)
+    # # Generate points on the circle
+    # theta = np.linspace(0, 2*np.pi, 100)
+    # circle_x = x + r * np.cos(theta)
+    # circle_y = y + r * np.sin(theta)
 
-    self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
+    # self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
+    self.obstacle, = self.ax.plot([], [], 'k--')
 
     # for analysis
     self.com_x_traj = []
@@ -157,4 +158,15 @@ class Graph:
     self.target_x_traj.append(gamma_pos[0])
     self.target_y_traj.append(gamma_pos[1])
 
-    return self.pts, self.gamma, self.beta
+    # obstacle
+    x = self.V[0].obstacle_x
+    y = self.V[0].obstacle_y # Center of the circle
+    r = 10         # Radius
+
+    # Generate points on the circle
+    theta = np.linspace(0, 2*np.pi, 100)
+    circle_x = x + r * np.cos(theta)
+    circle_y = y + r * np.sin(theta)
+    self.obstacle.set_data(circle_x, circle_y)
+
+    return self.pts, self.gamma, self.beta, self.obstacle

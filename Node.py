@@ -59,7 +59,7 @@ class Node(Thread):
     self.gamma_vel = np.array([0, 0])
     # self.gamma_u = np.array([0.5, 0.3])
 
-    self.obstacle_x, self.obstacle_y = 70, 50     # Center of the circle
+    self.obstacle_x, self.obstacle_y = 50, 50     # Center of the circle
     self.obstacle_r = 10         # Radius
     
     self.start_time = time.time()
@@ -159,6 +159,10 @@ class Node(Thread):
 
     f_gamma = f_gamma - self.c1_mc * (avg_pos - self.gamma_pos) - self.c2_mc * (avg_vel - self.gamma_vel)
 
+
+    self.obstacle_x += 0.2
+    # self.obstacle_y -= 0.35
+
     # obstacle
     y_k = np.array([self.obstacle_x, self.obstacle_y])
     r_k = self.obstacle_r
@@ -178,7 +182,11 @@ class Node(Thread):
     # self.u = f_gamma + f_beta
     # self.u = f_alpha + f_gamma
     # self.u = f_gamma
+
     self.u = f_alpha + f_gamma + f_beta
+
+    # if self.uid < 5: 
+    #   self.u = np.array([40, 20])
   
   def dynamics(self):
     """ Move towards the centroid """
