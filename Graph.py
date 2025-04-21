@@ -14,13 +14,14 @@ class Graph:
     self.root = None
     
     # for plotting
-    self.animatedt = 100 # milliseconds
+    # self.animatedt = 100 # milliseconds
+    self.animatedt = 10 # milliseconds
     self.fig = plt.figure()
     self.ax = plt.axes(xlim=(0, 200.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
     self.gamma, = self.ax.plot([], [], 'r*')
-    self.beta, = self.ax.plot([], [], 'go')
+    # self.beta, = self.ax.plot([], [], 'g.')
     self.anim = None
 
     # # obstacle
@@ -147,7 +148,7 @@ class Graph:
     self.pts.set_data(x, y)
 
     beta_x, beta_y = self.gatherBetaLocations()
-    self.beta.set_data(beta_x, beta_y)
+    # self.beta.set_data(beta_x, beta_y)
     
     gamma_pos = self.V[0].gamma_pos
     self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
@@ -169,4 +170,4 @@ class Graph:
     circle_y = y + r * np.sin(theta)
     self.obstacle.set_data(circle_x, circle_y)
 
-    return self.pts, self.gamma, self.beta, self.obstacle
+    return self.pts, self.gamma, self.obstacle #, self.beta
