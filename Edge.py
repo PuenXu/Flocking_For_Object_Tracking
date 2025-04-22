@@ -10,7 +10,7 @@ class Edge:
     
     self.val = None
     
-    self.commsradius = 9
+    self.commsradius = 9 # interaction range
     
   def __str__(self):
     """ Printing """

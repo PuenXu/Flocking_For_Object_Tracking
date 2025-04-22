@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Load data from both CSVs and use only first 135 rows
-free_data = np.loadtxt('good_free.csv', delimiter=',', skiprows=1)[:135]
-obs_data = np.loadtxt('good_obstacle.csv', delimiter=',', skiprows=1)[:135]
+free_data = np.loadtxt('flock_free.csv', delimiter=',', skiprows=1)[:135]
+obs_data = np.loadtxt('flock_main.csv', delimiter=',', skiprows=1)[:135]
 
 def extract_columns(data):
     return {
@@ -27,9 +26,8 @@ time = np.arange(n) * dt
 mse_free = np.sqrt((free['com_x'] - free['target_x'])**2 + (free['com_y'] - free['target_y'])**2)
 mse_obs  = np.sqrt((obs['com_x'] - obs['target_x'])**2 + (obs['com_y'] - obs['target_y'])**2)
 
-# === Figure 1: 2x2 Subplots (Deviation, Vel Mismatch, Cohesion, Connectivity) ===
 fig1, axs1 = plt.subplots(2, 2, figsize=(12, 8))
-fig1.suptitle('System Properties Comparison', fontsize=14)
+# fig1.suptitle('Flocking Verification', fontsize=14)
 
 axs1[0, 0].plot(time, free['en_deviation'], label='Free Space')
 axs1[0, 0].plot(time, obs['en_deviation'], label='Obstacle')
@@ -49,9 +47,9 @@ axs1[0, 1].legend()
 
 axs1[1, 0].plot(time, free['cohesion'], label='Free Space')
 axs1[1, 0].plot(time, obs['cohesion'], label='Obstacle')
-axs1[1, 0].set_title('Cohesion')
+axs1[1, 0].set_title('Cohesion Radius')
 axs1[1, 0].set_xlabel('Time (s)')
-axs1[1, 0].set_ylabel('Cohesion')
+axs1[1, 0].set_ylabel('Cohesion Radius (m)')
 axs1[1, 0].grid(True)
 axs1[1, 0].legend()
 
@@ -66,12 +64,12 @@ axs1[1, 1].legend()
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
 
-# === Figure 2: 1x3 Subplots (Free Traj, Obstacle Traj, MSE) ===
+
 fig2, axs2 = plt.subplots(1, 3, figsize=(18, 5))
-fig2.suptitle('Trajectories and MSE Comparison', fontsize=14)
+# fig2.suptitle('Tracking Performance', fontsize=14)
 
 def plot_trajectory(ax, data, title):
-    if title == 'Obstacle Trajectory':
+    if title == 'Trajectory with Obstacle':
         x, y, r = 100, 50, 10
         theta = np.linspace(0, 2 * np.pi, 100)
         circle_x = x + r * np.cos(theta)
@@ -88,8 +86,8 @@ def plot_trajectory(ax, data, title):
     ax.grid(True)
     ax.legend()
 
-plot_trajectory(axs2[0], free, 'Free Space Trajectory')
-plot_trajectory(axs2[1], obs, 'Obstacle Trajectory')
+plot_trajectory(axs2[0], free, 'Trajectory in Free Space')
+plot_trajectory(axs2[1], obs, 'Trajectory with Obstacle')
 
 axs2[2].plot(time, mse_free, label='Free Space')
 axs2[2].plot(time, mse_obs, label='Obstacle')

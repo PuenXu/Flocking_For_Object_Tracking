@@ -14,7 +14,7 @@ def generateRandomGraph(N):
   for inode in range(N):
     # randomly generate node states
     n = Node(inode)
-    n.position = np.random.rand(2) * 75 # random from [0, 20]
+    n.position = np.random.rand(2) * 75 # random from [0, 75]
     G.addNode(n)
   
     # add all-to-all edges

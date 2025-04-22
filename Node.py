@@ -25,15 +25,6 @@ class Node(Thread):
 
     self.u = np.array([0, 0]) # control input
 
-    # self.c1_alpha = 3
-    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    # self.c1_mt = 5
-    # self.c2_mt = 2 * np.sqrt(self.c1_mt)
-    # self.c1_mc = 5
-    # self.c2_mc = 2 * np.sqrt(self.c1_mt)
-    # self.c1_beta = 20
-    # self.c2_beta = 2 * np.sqrt(self.c1_beta)
-
     self.c1_alpha = 5
     self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
     self.c1_mt = 15
@@ -43,21 +34,8 @@ class Node(Thread):
     self.c1_beta = 300
     self.c2_beta = 2 * np.sqrt(self.c1_beta)
 
-    # self.c1_alpha = 1
-    # self.c2_alpha = 2 * np.sqrt(self.c1_alpha)
-    # self.c1_mt = 5
-    # self.c2_mt = 2 * np.sqrt(self.c1_mt)
-
-    # self.c1_alpha = 1
-    # self.c2_alpha = 1
-    # self.c1_mt = 1
-    # self.c2_mt = 1
-    # self.c1_mc = 1
-    # self.c2_mc = 1
-
     self.gamma_pos = np.array([20, 50])
     self.gamma_vel = np.array([0, 0])
-    # self.gamma_u = np.array([0.5, 0.3])
 
     self.obstacle_x, self.obstacle_y = 100, 50     # Center of the circle
     self.obstacle_r = 10         # Radius
@@ -170,14 +148,9 @@ class Node(Thread):
 
     f_beta = 0
 
-    if np.linalg.norm(self.q_ik_var-self.position) < 9:
+    if np.linalg.norm(self.q_ik_var-self.position) < 9 / 1.2:
       f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
-    # print(f_beta)
-
-    # self.u = f_gamma + f_beta
-    # self.u = f_alpha + f_gamma
-    # self.u = f_gamma
     self.u = f_alpha + f_gamma + f_beta
   
   def dynamics(self):
@@ -185,7 +158,5 @@ class Node(Thread):
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
 
-    # curr_time = time.time() - self.start_time
-    # self.gamma_vel = np.array([15, 50 * np.sin(2 * np.pi * curr_time / 15)])
     self.gamma_vel = np.array([20, 0])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt
