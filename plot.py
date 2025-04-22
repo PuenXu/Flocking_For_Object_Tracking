@@ -9,6 +9,10 @@ com_x = data[:, 0]
 com_y = data[:, 1]
 target_x = data[:, 2]
 target_y = data[:, 3]
+connectivity = data[:, 4]
+cohesion = data[:, 5]
+vel_mismatch = data[:, 6]
+en_deviation = data[:, 7]
 
 n = len(com_x)
 
@@ -25,7 +29,19 @@ mse = np.sqrt(np.subtract(com_x, target_x)**2 + np.subtract(com_y, target_y)**2)
 # circle_x = x + r * np.cos(theta)
 # circle_y = y + r * np.sin(theta)
 
+plt.figure()
+plt.plot(time, en_deviation)
+plt.xlabel('time (s)')
+plt.ylabel('energy_deviation')
+# plt.title('Mean Square Error vs Time')
+plt.show()
 
+plt.figure()
+plt.plot(time, vel_mismatch)
+plt.xlabel('time (s)')
+plt.ylabel('velocity_mismatch')
+# plt.title('Mean Square Error vs Time')
+plt.show()
 
 # Plot
 plt.figure()
@@ -45,4 +61,18 @@ plt.plot(time, mse)
 plt.xlabel('time (s)')
 plt.ylabel('mean squared error')
 plt.title('Mean Square Error vs Time')
+plt.show()
+
+plt.figure()
+plt.plot(time, connectivity)
+plt.xlabel('time (s)')
+plt.ylabel('connectivity')
+# plt.title('Mean Square Error vs Time')
+plt.show()
+
+plt.figure()
+plt.plot(time, cohesion)
+plt.xlabel('time (s)')
+plt.ylabel('cohesion')
+# plt.title('Mean Square Error vs Time')
 plt.show()
