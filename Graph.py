@@ -24,7 +24,7 @@ class Graph:
     self.anim = None
 
     # obstacle
-    x, y = 70, 50     # Center of the circle
+    x, y = 100, 50     # Center of the circle
     r = 10         # Radius
 
     # Generate points on the circle
@@ -168,12 +168,27 @@ class Graph:
     diff_q = q - q_avg
     distances = np.linalg.norm(diff_q, axis=1)
     max_distance = np.max(distances)
-    E_q = np.sum(distances**2)
+    # E_q = np.sum(distances**2)
+
+    r = 9
+    d = 9 / 1.2
+    total = 0
+    edge_count = 0
 
     for i in range(n):
         for j in range(i + 1, n):  # Exploit symmetry
             a = a_ij(q[i], q[j])
             A[i, j] = A[j, i] = a
+            
+            dist = np.linalg.norm(q[i] - q[j])
+            if dist < r:
+                total += (dist - d) ** 2
+                edge_count += 1
+
+    # Normalize by number of edges + 1
+    E_q = total / (edge_count + 1)
+    E_q_normalized = E_q / d**2
+    self.en_deviation_traj.append(E_q_normalized)
 
     # Connectivity (normalized matrix rank)
     connectivity = np.linalg.matrix_rank(A) / n
@@ -183,9 +198,9 @@ class Graph:
     self.cohesion_traj.append(max_distance)
 
     # Deviation Energy
-    d = 9 / 1.2
-    E_q_normalized = E_q / d**2
-    self.en_deviation_traj.append(E_q_normalized)
+    # d = 9 / 1.2
+    # E_q_normalized = E_q / d**2
+    # self.en_deviation_traj.append(E_q_normalized)
 
     # Gather velocity and compute mismatch
     vx, vy = self.gatherNodeVelocity()

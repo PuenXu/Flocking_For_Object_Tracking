@@ -59,7 +59,7 @@ class Node(Thread):
     self.gamma_vel = np.array([0, 0])
     # self.gamma_u = np.array([0.5, 0.3])
 
-    self.obstacle_x, self.obstacle_y = 70, 50     # Center of the circle
+    self.obstacle_x, self.obstacle_y = 100, 50     # Center of the circle
     self.obstacle_r = 10         # Radius
     
     self.start_time = time.time()
