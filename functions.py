@@ -63,7 +63,6 @@ def rho_h_obstacle(z):
     else:
         return 0
     
-# d_prime = 0.6*d
 r_prime = 1.2*r
 d_beta = sigma_norm(r_prime)
 
