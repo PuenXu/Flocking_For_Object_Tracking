@@ -20,7 +20,7 @@ class Graph:
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
     self.gamma, = self.ax.plot([], [], 'r*')
-    self.beta, = self.ax.plot([], [], 'go')
+    # self.beta, = self.ax.plot([], [], 'go')
     self.anim = None
 
     # obstacle
@@ -32,7 +32,7 @@ class Graph:
     circle_x = x + r * np.cos(theta)
     circle_y = y + r * np.sin(theta)
 
-    self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
+    # self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
 
     # for analysis
     self.com_x_traj = []
@@ -145,8 +145,8 @@ class Graph:
     x, y = self.gatherNodeLocations()
     self.pts.set_data(x, y)
 
-    beta_x, beta_y = self.gatherBetaLocations()
-    self.beta.set_data(beta_x, beta_y)
+    # beta_x, beta_y = self.gatherBetaLocations()
+    # self.beta.set_data(beta_x, beta_y)
     
     gamma_pos = self.V[0].gamma_pos
     self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
@@ -157,4 +157,4 @@ class Graph:
     self.target_x_traj.append(gamma_pos[0])
     self.target_y_traj.append(gamma_pos[1])
 
-    return self.pts, self.gamma, self.beta
+    return self.pts, self.gamma #, self.beta
