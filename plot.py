@@ -25,8 +25,6 @@ theta = np.linspace(0, 2*np.pi, 100)
 circle_x = x + r * np.cos(theta)
 circle_y = y + r * np.sin(theta)
 
-
-
 # Plot
 plt.figure()
 plt.axes(xlim=(0, 150.0), ylim=(0, 150.0)).set_aspect('equal', 'box')

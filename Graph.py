@@ -14,8 +14,7 @@ class Graph:
     self.root = None
     
     # for plotting
-    # self.animatedt = 100 # milliseconds
-    self.animatedt = 10 # milliseconds
+    self.animatedt = 100 # milliseconds
     self.fig = plt.figure()
     self.ax = plt.axes(xlim=(0, 200.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
@@ -24,16 +23,6 @@ class Graph:
     # self.beta, = self.ax.plot([], [], 'g.')
     self.anim = None
 
-    # # obstacle
-    # x, y = 70, 50     # Center of the circle
-    # r = 10         # Radius
-
-    # # Generate points on the circle
-    # theta = np.linspace(0, 2*np.pi, 100)
-    # circle_x = x + r * np.cos(theta)
-    # circle_y = y + r * np.sin(theta)
-
-    # self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
     self.obstacle, = self.ax.plot([], [], 'k--')
 
     # for analysis
