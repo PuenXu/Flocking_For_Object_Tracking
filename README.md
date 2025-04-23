@@ -5,25 +5,17 @@
 **Instructor:** Dr. Cynthia Sung  
 **Semester:** Spring 2025  
 
----
-
 ### Objective
 
 Placeholder.
 
----
-
 ### Simulation
 
-Placeholder
-
----
+Placeholder.
 
 ### Resources
 
 Placeholder.
-
----
 
 ### References
 
