@@ -19,8 +19,9 @@ class Graph:
     self.ax = plt.axes(xlim=(0, 200.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
+    self.adversarial, = self.ax.plot([], [], 'k.')
     self.gamma, = self.ax.plot([], [], 'r*')
-    self.beta, = self.ax.plot([], [], 'go')
+    # self.beta, = self.ax.plot([], [], 'go')
     self.anim = None
 
     # obstacle
@@ -113,8 +114,8 @@ class Graph:
       self.V[i].join()
       
     # for analysis
-    # data = np.column_stack((self.com_x_traj, self.com_y_traj, self.target_x_traj, self.target_y_traj, self.connectivity_traj, self.cohesion_traj, self.vel_mismatch_traj, self.en_deviation_traj))
-    # np.savetxt('data.csv', data, delimiter=',', header='com_x, com_y, target_x, target_y, connectivity, cohesion, vel_mismatch, en_deviation', comments='')
+    data = np.column_stack((self.com_x_traj, self.com_y_traj, self.target_x_traj, self.target_y_traj, self.connectivity_traj, self.cohesion_traj, self.vel_mismatch_traj, self.en_deviation_traj))
+    np.savetxt('data.csv', data, delimiter=',', header='com_x, com_y, target_x, target_y, connectivity, cohesion, vel_mismatch, en_deviation', comments='')
 
   ################################################
   #
@@ -158,65 +159,67 @@ class Graph:
     x, y = self.gatherNodeLocations()
     self.pts.set_data(x, y)
 
-    beta_x, beta_y = self.gatherBetaLocations()
-    self.beta.set_data(beta_x, beta_y)
+    self.adversarial.set_data(x[:5], y[:5])
+
+    # beta_x, beta_y = self.gatherBetaLocations()
+    # self.beta.set_data(beta_x, beta_y)
 
     # Gamma (target) location
     gamma_pos = self.V[0].gamma_pos
     self.gamma.set_data([gamma_pos[0]], [gamma_pos[1]])
 
-    # q = np.column_stack((x, y))
-    # n = q.shape[0]
+    q = np.column_stack((x, y))
+    n = q.shape[0]
 
-    # A = np.zeros((n, n))
-    # q_avg = np.mean(q, axis=0)
-    # diff_q = q - q_avg
-    # distances = np.linalg.norm(diff_q, axis=1)
-    # max_distance = np.max(distances)
+    A = np.zeros((n, n))
+    q_avg = np.mean(q, axis=0)
+    diff_q = q - q_avg
+    distances = np.linalg.norm(diff_q, axis=1)
+    max_distance = np.max(distances)
 
-    # r = 9
-    # d = 9 / 1.2
-    # total = 0
-    # edge_count = 0
+    r = 9
+    d = 9 / 1.2
+    total = 0
+    edge_count = 0
 
-    # for i in range(n):
-    #     for j in range(i + 1, n):  # Exploit symmetry
-    #         a = a_ij(q[i], q[j])
-    #         A[i, j] = A[j, i] = a
+    for i in range(n):
+        for j in range(i + 1, n):  # Exploit symmetry
+            a = a_ij(q[i], q[j])
+            A[i, j] = A[j, i] = a
             
-    #         dist = np.linalg.norm(q[i] - q[j])
-    #         if dist < r:
-    #             total += (dist - d) ** 2
-    #             edge_count += 1
+            dist = np.linalg.norm(q[i] - q[j])
+            if dist < r:
+                total += (dist - d) ** 2
+                edge_count += 1
 
-    # # Normalize by number of edges + 1
-    # E_q = total / (edge_count + 1)
-    # E_q_normalized = E_q / d**2
-    # self.en_deviation_traj.append(E_q_normalized)
+    # Normalize by number of edges + 1
+    E_q = total / (edge_count + 1)
+    E_q_normalized = E_q / d**2
+    self.en_deviation_traj.append(E_q_normalized)
 
-    # # Connectivity (normalized matrix rank)
-    # connectivity = np.linalg.matrix_rank(A) / n
-    # self.connectivity_traj.append(connectivity)
+    # Connectivity (normalized matrix rank)
+    connectivity = np.linalg.matrix_rank(A) / n
+    self.connectivity_traj.append(connectivity)
 
-    # # Cohesion (max distance to center)
-    # self.cohesion_traj.append(max_distance)
+    # Cohesion (max distance to center)
+    self.cohesion_traj.append(max_distance)
 
-    # # Gather velocity and compute mismatch
-    # vx, vy = self.gatherNodeVelocity()
-    # v = np.column_stack((vx, vy))
-    # v_avg = np.mean(v, axis=0)
-    # diff_v = v - v_avg
-    # K_v_normalized = np.sum(np.linalg.norm(diff_v, axis=1)**2) / n
-    # self.vel_mismatch_traj.append(K_v_normalized)
+    # Gather velocity and compute mismatch
+    vx, vy = self.gatherNodeVelocity()
+    v = np.column_stack((vx, vy))
+    v_avg = np.mean(v, axis=0)
+    diff_v = v - v_avg
+    K_v_normalized = np.sum(np.linalg.norm(diff_v, axis=1)**2) / n
+    self.vel_mismatch_traj.append(K_v_normalized)
 
-    # # Center of mass trajectory
-    # com_x = np.mean(x)
-    # com_y = np.mean(y)
-    # self.com_x_traj.append(com_x)
-    # self.com_y_traj.append(com_y)
+    # Center of mass trajectory
+    com_x = np.mean(x)
+    com_y = np.mean(y)
+    self.com_x_traj.append(com_x)
+    self.com_y_traj.append(com_y)
 
-    # # Target trajectory
-    # self.target_x_traj.append(gamma_pos[0])
-    # self.target_y_traj.append(gamma_pos[1])
+    # Target trajectory
+    self.target_x_traj.append(gamma_pos[0])
+    self.target_y_traj.append(gamma_pos[1])
 
-    return self.pts, self.gamma, self.beta
+    return self.pts, self.gamma, self.adversarial #, self.beta

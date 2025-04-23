@@ -152,11 +152,23 @@ class Node(Thread):
       f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
     self.u = f_alpha + f_gamma + f_beta
+
+    # static
+    # if self.uid < 5:
+    #   self.u = 0
+
+    # print(self.u)
+
+    # random input
+    if self.uid < 5:
+      self.u = np.random.rand(2) * 300 - 150
   
   def dynamics(self):
     """ Move towards the centroid """
+    
     self.velocity = self.velocity + self.u * self.nominaldt
     self.position = self.position + self.velocity * self.nominaldt
+
 
     self.gamma_vel = np.array([20, 0])
     self.gamma_pos = self.gamma_pos + self.gamma_vel * self.nominaldt
