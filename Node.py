@@ -157,8 +157,6 @@ class Node(Thread):
     # if self.uid < 5:
     #   self.u = 0
 
-    # print(self.u)
-
     # random input
     if self.uid < 5:
       self.u = np.random.rand(2) * 300 - 150

@@ -157,6 +157,10 @@ class Graph:
     """ Animation helper function """
     # Gather positions
     x, y = self.gatherNodeLocations()
+
+    x = x[5:]
+    y = y[5:]
+
     self.pts.set_data(x, y)
 
     self.adversarial.set_data(x[:5], y[:5])
@@ -206,6 +210,10 @@ class Graph:
 
     # Gather velocity and compute mismatch
     vx, vy = self.gatherNodeVelocity()
+
+    vx = vx[5:]
+    vy = vy[5:]
+
     v = np.column_stack((vx, vy))
     v_avg = np.mean(v, axis=0)
     diff_v = v - v_avg
