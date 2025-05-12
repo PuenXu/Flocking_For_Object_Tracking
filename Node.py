@@ -31,7 +31,7 @@ class Node(Thread):
     self.c2_mt = 2 * np.sqrt(self.c1_mt)
     self.c1_mc = 10
     self.c2_mc = 2 * np.sqrt(self.c1_mt)
-    self.c1_beta = 300
+    self.c1_beta = 800
     self.c2_beta = 2 * np.sqrt(self.c1_beta)
 
     self.gamma_pos = np.array([20, 50])
@@ -39,6 +39,19 @@ class Node(Thread):
 
     self.obstacle_x, self.obstacle_y = 100, 50     # Center of the circle
     self.obstacle_r = 10         # Radius
+
+    self.obstacle_x_2, self.obstacle_y_2 = 75, 60     # Center of the circle
+    self.obstacle_r_2 = 3         # Radius
+
+    self.obstacle_x_3, self.obstacle_y_3 = 70, 35     # Center of the circle
+    self.obstacle_r_3 = 5        # Radius
+
+    # Define multiple obstacles
+    # self.obstacles = [
+    #     {"x": 100, "y": 50, "r": 10},
+    #     {"x": 120, "y": 80, "r": 12},
+    #     {"x": 90,  "y": 40, "r": 8}
+    # ]
     
     self.start_time = time.time()
 
@@ -149,9 +162,51 @@ class Node(Thread):
     f_beta = 0
 
     if np.linalg.norm(self.q_ik_var-self.position) < 9 / 1.2:
-      f_beta = self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
+      f_beta += self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
+
+    y_k = np.array([self.obstacle_x_2, self.obstacle_y_2])
+    r_k = self.obstacle_r_3
+    self.q_ik_var = q_ik(self.position, y_k, r_k)
+    p_ik_var = p_ik(self.position, self.velocity, y_k, r_k)
+
+    n_ik_var = n_ik(self.q_ik_var, self.position)
+    b_ik_var = b_ik(self.q_ik_var, self.position)
+
+    if np.linalg.norm(self.q_ik_var-self.position) < 9 / 1.2:
+      f_beta += self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
     
     self.u = f_alpha + f_gamma + f_beta
+
+    y_k = np.array([self.obstacle_x_3, self.obstacle_y_3])
+    r_k = self.obstacle_r_3
+    self.q_ik_var = q_ik(self.position, y_k, r_k)
+    p_ik_var = p_ik(self.position, self.velocity, y_k, r_k)
+
+    n_ik_var = n_ik(self.q_ik_var, self.position)
+    b_ik_var = b_ik(self.q_ik_var, self.position)
+
+    if np.linalg.norm(self.q_ik_var-self.position) < 9 / 1.2:
+      f_beta += self.c1_beta * phi_beta(sigma_norm(self.q_ik_var-self.position)) * n_ik_var + self.c2_beta * b_ik_var * (p_ik_var-self.velocity)
+    
+    self.u = f_alpha + f_gamma + f_beta
+
+    # f_beta = 0
+
+    # for obs in self.obstacles:
+    #   y_k = np.array([obs["x"], obs["y"]])
+    #   r_k = obs["r"]
+
+    #   q_ik_var = q_ik(self.position, y_k, r_k)
+    #   p_ik_var = p_ik(self.position, self.velocity, y_k, r_k)
+    #   n_ik_var = n_ik(q_ik_var, self.position)
+    #   b_ik_var = b_ik(q_ik_var, self.position)
+
+    #   if np.linalg.norm(q_ik_var - self.position) < r_k * 0.9:  # influence threshold
+    #       f_beta += self.c1_beta * phi_beta(sigma_norm(q_ik_var - self.position)) * n_ik_var \
+    #                 + self.c2_beta * b_ik_var * (p_ik_var - self.velocity)
+
+    # # Final control input
+    # self.u = f_alpha + f_gamma + f_beta
   
   def dynamics(self):
     """ Move towards the centroid """

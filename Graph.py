@@ -14,16 +14,16 @@ class Graph:
     self.root = None
     
     # for plotting
-    self.animatedt = 100 # milliseconds
+    self.animatedt = 500 # milliseconds
     self.fig = plt.figure()
     self.ax = plt.axes(xlim=(0, 200.0), ylim=(0, 100.0))
     self.ax.set_aspect('equal', 'box')
     self.pts, = self.ax.plot([], [], 'b.')
     self.gamma, = self.ax.plot([], [], 'r*')
-    self.beta, = self.ax.plot([], [], 'go')
+    # self.beta, = self.ax.plot([], [], 'go')
     self.anim = None
 
-    # obstacle
+    # # obstacle
     x, y = 100, 50     # Center of the circle
     r = 10         # Radius
 
@@ -32,7 +32,42 @@ class Graph:
     circle_x = x + r * np.cos(theta)
     circle_y = y + r * np.sin(theta)
 
-    self.ax.plot(circle_x, circle_y, 'k--', label='Obstacle')
+    self.ax.plot(circle_x, circle_y, 'k--')
+
+    x, y = 75, 60     # Center of the circle
+    r = 3         # Radius
+
+    theta = np.linspace(0, 2*np.pi, 100)
+    circle_x = x + r * np.cos(theta)
+    circle_y = y + r * np.sin(theta)
+
+    self.ax.plot(circle_x, circle_y, 'k--')
+
+    x, y = 70, 35     # Center of the circle
+    r = 5        # Radius
+
+    theta = np.linspace(0, 2*np.pi, 100)
+    circle_x = x + r * np.cos(theta)
+    circle_y = y + r * np.sin(theta)
+
+    self.ax.plot(circle_x, circle_y, 'k--')
+
+    # # Define multiple obstacles
+    # self.obstacles = [
+    #     {"x": 100, "y": 50, "r": 10},
+    #     {"x": 120, "y": 80, "r": 12},
+    #     {"x": 90,  "y": 40, "r": 8}
+    # ]
+
+    # # Plot each obstacle as a dashed circle
+    # theta = np.linspace(0, 2 * np.pi, 100)
+
+    # for i, obs in enumerate(self.obstacles):
+    #     x, y, r = obs["x"], obs["y"], obs["r"]
+    #     circle_x = x + r * np.cos(theta)
+    #     circle_y = y + r * np.sin(theta)
+    #     label = 'Obstacle' if i == 0 else None  # Label only once to avoid duplicate legend entries
+    #     self.ax.plot(circle_x, circle_y, 'k--', label=label)
 
     # for analysis
     self.com_x_traj = []
@@ -158,8 +193,8 @@ class Graph:
     x, y = self.gatherNodeLocations()
     self.pts.set_data(x, y)
 
-    beta_x, beta_y = self.gatherBetaLocations()
-    self.beta.set_data(beta_x, beta_y)
+    # beta_x, beta_y = self.gatherBetaLocations()
+    # self.beta.set_data(beta_x, beta_y)
 
     # Gamma (target) location
     gamma_pos = self.V[0].gamma_pos
@@ -219,4 +254,4 @@ class Graph:
     # self.target_x_traj.append(gamma_pos[0])
     # self.target_y_traj.append(gamma_pos[1])
 
-    return self.pts, self.gamma, self.beta
+    return self.pts, self.gamma #, self.beta
